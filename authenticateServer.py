@@ -63,10 +63,13 @@ def auth(host):
         host.socket.send("ERR VERIFY {}".format(email))
         print("NOT ON RECORD")
         return False
+    print(4)
     r = [n for n in c.execute("select pubkey, verified from users where email=?", (email,))][0]
+    print(5)
     p = r[0].split(":")
+    print(6)
     a = [int(n) for n in r[1].split(" ")]
-
+    print(7)
     if pubkey in p:
         if a[p.index(pubkey)] == 0:
             print("VERIFY NEEDED")
