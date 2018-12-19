@@ -65,10 +65,11 @@ def auth(host):
         return False
     print(4)
     r = [n for n in c.execute("select pubkey, verified from users where email=?", (email,))][0]
+    print(f"r1: {r1}")
     print(5)
     p = r[0].split(":")
     print(6)
-    print(f"r1: {r1}")
+
     a = [int(n) for n in r[1].split(" ")]
     print(7)
     if pubkey in p:
