@@ -49,14 +49,15 @@ def auth(host):
     c = conn.cursor()
     print("STARTING AUTH PROCESS")
     email = host.socket.read(blocking=True)
-    
+    print(1)
     pubkey = host.socket.read(blocking=True)
-
+    print(2)
     # if not email or not pubkey:
     #     print("EMAIL OR PUBKEY NOT SENT")
     #     return False
     
     a = [n for n in c.execute("select email from users where email=?", (email,))]
+    print(3)
     if not a:
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
         host.socket.send("ERR VERIFY {}".format(email))
