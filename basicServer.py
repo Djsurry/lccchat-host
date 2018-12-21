@@ -53,7 +53,9 @@ class Host(threading.Thread):
         super().__init__()
         self.socket = conn
         self.hostname = self.socket.sock.gethostname()
+        logging.info("starting auth")
         resp = auth(self)
+        logging.info("finished auth, got {}".format(resp))
         self.que = []
         self.outgoing = []
         if resp:
@@ -92,6 +94,7 @@ class Host(threading.Thread):
         return cipher.decrypt(data)[16:].decode()
     def run(self):
         while self.authenticated and self.active:
+            logging.info("Starting loop")
             if self.socket.bufferedData():
                 data = self.read()
                 if data == None:
