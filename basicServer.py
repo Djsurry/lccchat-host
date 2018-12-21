@@ -53,7 +53,7 @@ class Host(threading.Thread):
         super().__init__()
         print("CREATED")
         self.socket = conn
-        self.hostname = self.socket.sock.gethostname()
+        self.hostname = "me"
         logging.info("starting auth")
         resp = auth(self)
         print("got {}".format(resp))
