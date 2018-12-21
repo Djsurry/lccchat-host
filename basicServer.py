@@ -89,6 +89,10 @@ class Host(threading.Thread):
         while self.authenticated and self.active:
             if self.socket.bufferedData():
                 data = self.read()
+                if data == None:
+                    self.close()
+                    print("host disconnected")
+                    continue
                 print(f"Recevied: {data}")
                 packet = parse(data)
                 if type(packet) == REQ:
