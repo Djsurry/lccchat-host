@@ -58,6 +58,7 @@ class Host(threading.Thread):
             self.key = resp[0]
             self.authenticated = True
             self.active = True
+        self.authenticated = False
 
 
     def _send(self, data):
