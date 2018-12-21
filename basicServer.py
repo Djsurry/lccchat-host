@@ -56,6 +56,7 @@ class Host(threading.Thread):
         self.hostname = self.socket.sock.gethostname()
         logging.info("starting auth")
         resp = auth(self)
+        print("got {}".format(resp))
         logging.info("finished auth, got {}".format(resp))
         self.que = []
         self.outgoing = []
