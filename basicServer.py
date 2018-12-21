@@ -10,7 +10,7 @@ from protocal import SND, REQ, STA, parse, RECV, DATA
 import pickle, json
 import logging
 
-logging.basicConfig(format='%(levelname)s:%(message)s', filename='/var/log/lccchat.log', level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 ["SND email msg", "REQ email", "STA bool"]
 
