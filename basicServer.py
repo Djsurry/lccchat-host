@@ -19,7 +19,8 @@ import pickle, json
 def getHistory(user, recv):
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
-    path = c.execute("select history from users where email=?", (user,))
+    path = c.execute("select history from users where email=?", (user,))[0]
+    print(path)
     history = json.load(open(path))
     conn.close()
     if recv not in history.keys():
