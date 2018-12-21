@@ -59,7 +59,9 @@ def auth(host):
     a = [n for n in c.execute("select email from users where email=?", (email,))]
     print(3)
     if not a:
+
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
+        print("SENT")
         host.socket.send("ERR VERIFY {}".format(email))
         print("NOT ON RECORD")
         return False
