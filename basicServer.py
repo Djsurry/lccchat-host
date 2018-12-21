@@ -36,6 +36,7 @@ def addToHistroy(user, recv, msg):
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
     path = list(c.execute("select history from users where email=?", (user,)))[0]
+    logging.info("THE THING: {}".format(list(c.execute("select history from users where email=?", (user,)))))
     logging.info(path)
     history = json.load(open(path))
     if recv in history.keys():
