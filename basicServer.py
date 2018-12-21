@@ -34,7 +34,8 @@ def getHistory(user, recv):
 def addToHistroy(user, recv, msg):
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
-    path = c.execute("select history from users where email=?", (user,))
+    path = c.execute("select history from users where email=?", (user,))[0]
+    logging.info(path)
     history = json.load(open(path))
     if recv in history.keys():
         histroy[recv].append((True, msg))
@@ -95,8 +96,9 @@ class Host(threading.Thread):
         cipher = AES.new(self.key, AES.MODE_CFB, iv)
         return cipher.decrypt(data)[16:].decode()
     def run(self):
+        logging.info("Starting loop")
         while self.authenticated and self.active:
-            logging.info("Starting loop")
+
             if self.socket.bufferedData():
                 data = self.read()
                 if data == None:
