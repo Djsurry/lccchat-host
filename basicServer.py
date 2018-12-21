@@ -8,6 +8,9 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto import Random
 from protocal import SND, REQ, STA, parse, RECV, DATA
 import pickle, json
+import logging
+
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 ["SND email msg", "REQ email", "STA bool"]
 
@@ -47,11 +50,10 @@ def addToHistroy(user, recv, msg):
 
 class Host(threading.Thread):
     def __init__(self, conn):
-        print("INIT NEW HOST")
         super().__init__()
         self.socket = conn
+        self.hostname = self.socket.sock.gethostname()
         resp = auth(self)
-        print(f"RESP: {resp}")
         self.que = []
         self.outgoing = []
         if resp:
@@ -73,7 +75,7 @@ class Host(threading.Thread):
         self.socket.send(msg)
     
     def send(self, msg):
-        print(f"adding {msg} to que")
+        logging.info("adding message {0} to que of {1}".format(msg, self.hostname))
         self.que.append(msg)
 
     def close(self):
@@ -94,9 +96,9 @@ class Host(threading.Thread):
                 data = self.read()
                 if data == None:
                     self.close()
-                    print("host disconnected")
+                    logging.info("host {} dc".format(self.hostname))
                     continue
-                print(f"Recevied: {data}")
+                logging.info("{0} received {1}".format(self.hostname, data))
                 packet = parse(data)
                 if type(packet) == REQ:
                     history = getHistory(self.email, packet.target)
@@ -110,7 +112,7 @@ class Host(threading.Thread):
                     self.addToQue(new)
 
             if len(self.que) > 0:
-                print(f"Sending: {self.que[0]}")
+                logging.info(f"Sending: {self.que[0]}")
                 self._send(self.que[0])
                 del self.que[0]
         self.socket.close()
@@ -129,7 +131,7 @@ class Server:
         while self.active:
             try:
                 conn, addr = self.socket.accept()
-                print(f"Connected to {addr}")
+                logging.info(f"Connected to {addr}")
                 t = Host(conn)
                 t.start()
                 self.clients.append(t)
@@ -163,7 +165,7 @@ class Server:
         t.start()
     def serverWideMessage(self, msg):
         for i in self.clients:
-            print(f"SENT TO {i.socket.sock.getpeername()}")
+
             i.send(msg)
 
 if __name__ == "__main__":
