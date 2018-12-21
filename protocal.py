@@ -74,10 +74,10 @@ def parse(data):
     if classifier == "REQ":
         packet = REQ(target=data.split()[1])
     elif classifier == "RECV":
-        packet = RECV(sender=data.split()[1], content=' '.join(data.split()[2:]))
-    elif classifier == "SND":
+        packet = RECV(sender=data.split()[1], target=data.split()[2], content=' '.join(data.split()[3]:]))
+        elif classifier == "SND":
         packet = SND(target=data.split()[1], content=' '.join(data.split()[2:]))
-    elif classifier == "STA":
+        elif classifier == "STA":
         packet = STA(status=data.split()[1])
     return packet
 
