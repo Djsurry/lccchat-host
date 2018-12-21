@@ -20,6 +20,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s', filename='/var/log/lccch
 
 
 def getHistory(user, recv):
+    print('LOL')
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
     logging.info("THE THING: {}".format(list(c.execute("select history from users where email=?", (user,)))))
