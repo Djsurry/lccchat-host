@@ -61,7 +61,6 @@ def auth(host):
     if not a:
 
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
-        print("SENT")
         host.socket.send("ERR VERIFY {}".format(email))
         print("NOT ON RECORD")
         return False

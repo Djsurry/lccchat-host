@@ -49,9 +49,10 @@ class User:
         print(f"KEY: {self.key}")
         self.active = True
         self.que = []
-   
+        print("finished")
     def _send(self, data):
         iv = Random.new().read(AES.block_size)
+        print("sending {}".format(data))
         cipher = AES.new(self.key, AES.MODE_CFB, iv)
         try:
             msg = iv + cipher.encrypt(data.encode())
@@ -75,7 +76,7 @@ class User:
         else:
             return None
     def loop(self):
-        
+        print("starting {0} {1}".format(self.authenticated, self.active))
         while self.authenticated and self.active:
            
             if self.sock.bufferedData():
@@ -117,9 +118,12 @@ class User:
 
 
 if __name__ == "__main__":
-    user = User() 
+    user = User()
+
     user.start()
+    print(1)
     user.send(SND(target='dsurry@wearelcc.ca', content="Hello"))
+    print(2)
     input()
     user.close()
     

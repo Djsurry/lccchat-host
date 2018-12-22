@@ -25,7 +25,7 @@ def getHistory(user, recv):
     c = conn.cursor()
     logging.info("THE THING: {}".format(list(c.execute("select history from users where email=?", (user,)))))
     path = list(c.execute("select history from users where email=?", (user,)))[0][0]
-    history = json.load(open(path))
+    history = json.load(open(path, "r+"))
     conn.close()
     if recv not in history.keys():
         return {recv: []}
@@ -42,17 +42,21 @@ def addToHistroy(user, recv, msg):
     print("logged")
     logging.info("adding : {}".format(list(c.execute("select history from users where email=?", (user,)))))
     logging.info(path)
-    history = json.load(open(path))
+    history = json.load(open(path, 'r+'))
     if recv in history.keys():
         histroy[recv].append((True, msg))
     else:
         history[recv] = [(True, msg)]
+    with open(path, 'w') as f:
+        f.write(json.dumps(history))
     path = c.execute("select history from users where email=?", (recv,))
-    history = json.load(open(path))
+    history = json.load(open(path, 'r+'))
     if user in history.keys():
         histroy[user].append((False, msg))
     else:
         history[user] = [(False, msg)]
+    with open(path, 'w') as f:
+        f.write(json.dumps(history))
     conn.close()
 
 class Host(threading.Thread):
