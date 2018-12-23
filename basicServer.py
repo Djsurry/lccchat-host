@@ -59,7 +59,7 @@ def addToHistroy(user, recv, msg):
         conn.commit()
     else:
         addr = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-        c.execute("insert into users values (?, '', '', ?, '')", (recv, addr))
+        c.execute("insert into users values (?, '', '', ?, '')", (recv, f"/home/histories/{addr}.json"))
         conn.commit()
     path = list(c.execute("select history from users where email=?", (recv,)))[0][0]
 
