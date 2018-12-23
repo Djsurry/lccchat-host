@@ -47,7 +47,7 @@ def addToHistroy(user, recv, msg):
     except:
         history = {}
     if recv in history.keys():
-        histroy[recv].append((True, msg))
+        history[recv].append((True, msg))
     else:
         history[recv] = [(True, msg)]
     with open(path, 'w+') as f:
