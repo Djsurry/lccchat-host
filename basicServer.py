@@ -42,17 +42,30 @@ def addToHistroy(user, recv, msg):
     print("logged")
     logging.info("adding : {}".format(list(c.execute("select history from users where email=?", (user,)))))
     logging.info(path)
-    history = json.load(open(path, 'r+'))
+    try:
+        history = json.load(open(path, 'r+'))
+    except:
+        history = {}
     if recv in history.keys():
         histroy[recv].append((True, msg))
     else:
         history[recv] = [(True, msg)]
-    with open(path, 'w') as f:
+    with open(path, 'w+') as f:
         f.write(json.dumps(history))
-    path = c.execute("select history from users where email=?", (recv,))
+
+    if not list(c.execute("select history from users where email=?", (recv,))) and list(c.execute("select * from users where email=?", (recv,))):
+        addr = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        c.execute('update users set history="/home/histories/{}.json" WHERE email=?'.format(addr), (recv,))
+        conn.commit()
+    else:
+        addr = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        c.execute("insert into users values (?, '', '', ?, '')", (recv, addr))
+        conn.commit()
+    path = list(c.execute("select history from users where email=?", (recv,)))[0][0]
+
     history = json.load(open(path, 'r+'))
     if user in history.keys():
-        histroy[user].append((False, msg))
+        history[user].append((False, msg))
     else:
         history[user] = [(False, msg)]
     with open(path, 'w') as f:

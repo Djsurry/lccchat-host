@@ -21,6 +21,7 @@ def verify(email, pubkey):
         conn.close()
         link = "https://lccchat.me/verify?token={}".format(hash)
         return link
+
     users = [n for n in c.execute("select pubkey, hash from users where email=?", (email,))][0]
     pubkeys = users[0].split(':')
     hashes = users[1].split(' ')
@@ -30,7 +31,7 @@ def verify(email, pubkey):
     pubkeys.append(pubkey)
     hashes.append(''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15)))
     s = [n[0] for n in c.execute('select verified from users where email=?', (email,))][0]
-    s += " 0"
+    s += "0 "
     ps = ''
     for i in pubkeys:
         ps += i
