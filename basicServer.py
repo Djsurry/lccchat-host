@@ -33,7 +33,7 @@ def getHistory(user, recv):
         return history[recv]
 
 def addToHistroy(user, recv, msg):
-    logging.info("checking on {}'s history".format(user))
+    logging.info("checking on {}'s history".format(user, recv))
     print("HEREMEGALUL")
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
