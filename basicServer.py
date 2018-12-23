@@ -62,13 +62,15 @@ def addToHistroy(user, recv, msg):
         c.execute("insert into users values (?, '', '', ?, '')", (recv, f"/home/histories/{addr}.json"))
         conn.commit()
     path = list(c.execute("select history from users where email=?", (recv,)))[0][0]
-
-    history = json.load(open(path, 'r+'))
+    try:
+        history = json.load(open(path, 'r+'))
+    except:
+        history = {}
     if user in history.keys():
         history[user].append((False, msg))
     else:
         history[user] = [(False, msg)]
-    with open(path, 'w') as f:
+    with open(path, 'w+') as f:
         f.write(json.dumps(history))
     conn.close()
 
