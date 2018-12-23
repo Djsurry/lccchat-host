@@ -7,7 +7,7 @@ from base64 import b64encode
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto import Random
 from protocal import SND, REQ, STA, parse, RECV, DATA
-import pickle, json, random
+import pickle, json, random, string
 import logging
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
