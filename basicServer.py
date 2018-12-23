@@ -33,7 +33,7 @@ def getHistory(user, recv):
         return history[recv]
 
 def addToHistroy(user, recv, msg):
-    logging.info("checking on {}'s history".format(user, recv))
+    logging.info("checking on {}'s history".format(user))
     print("HEREMEGALUL")
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
@@ -52,7 +52,7 @@ def addToHistroy(user, recv, msg):
         history[recv] = [(True, msg)]
     with open(path, 'w+') as f:
         f.write(json.dumps(history))
-
+    logging.info(f"RECV: {recv}")
     if not list(c.execute("select history from users where email=?", (recv,))) and list(c.execute("select * from users where email=?", (recv,))):
         addr = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
         c.execute('update users set history="/home/histories/{}.json" WHERE email=?'.format(addr), (recv,))
