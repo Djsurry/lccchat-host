@@ -136,7 +136,7 @@ class Host(threading.Thread):
                     self.send(new.construct())
                 elif type(packet) == SND:
                     msg = packet.content
-                    target = packet.content
+                    target = packet.target
                     new = RECV(sender=self.email, content=msg, target=target)
                     addToHistroy(new.sender, new.target, new.content)
                     self.addToQue(new)
