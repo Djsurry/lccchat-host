@@ -16,10 +16,17 @@ class Socket:
     def listen(self,n):
         self.sock.listen(n)
 
-    def accept(self):
-        c,a = self.sock.accept()
-        # Wrap the client socket in a Socket.
-        return Socket(c),a
+    def accept(self, blocking=False):
+        if blocking:
+            c,a = self.sock.accept()
+            # Wrap the client socket in a Socket.
+            return Socket(c),a
+        if self.bufferedData():
+            c, a = self.sock.accept()
+            # Wrap the client socket in a Socket.
+            return Socket(c), a
+        else:
+            return None, None
 
     def bufferedData(self):
         r, _, _ = select.select([self.sock], [], [], 0)

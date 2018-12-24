@@ -186,11 +186,12 @@ class Server:
     def run(self):
         while self.active:
             try:
-                conn, addr = self.socket.accept()
-                logging.info(f"Connected to {addr}")
-                t = Host(conn)
-                t.start()
-                self.clients.append(t)
+                conn, addr = self.socket.accept(blocking=False)
+                if conn:
+                    logging.info(f"Connected to {addr}")
+                    t = Host(conn)
+                    t.start()
+                    self.clients.append(t)
             except:
                 continue
 
