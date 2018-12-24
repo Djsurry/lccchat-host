@@ -233,6 +233,5 @@ if __name__ == "__main__":
         server = Server()
         server.start()
         input()
-    except Exception as e:
-        traceback.print_exc()
+    except KeyboardInterrupt:
         server.close()
