@@ -1,4 +1,4 @@
-import Stockings, socket, os, struct, sqlite3, threading, time
+import socket, os, struct, sqlite3, threading, time
 from Socket import Socket
 from authenticateServer import auth
 from Crypto.Cipher import AES
@@ -9,6 +9,8 @@ from Crypto import Random
 from protocal import SND, REQ, STA, parse, RECV, DATA
 import pickle, json, random, string
 import logging
+
+DATABASE = '/var/www/lccchat/lccchat/lccchat.db'
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
@@ -21,7 +23,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 def getHistory(user, recv):
     print('LOL')
-    conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     logging.info("THE THING: {}".format(list(c.execute("select history from users where email=?", (user,)))))
     path = list(c.execute("select history from users where email=?", (user,)))[0][0]
@@ -35,7 +37,7 @@ def getHistory(user, recv):
 def addToHistroy(user, recv, msg):
     logging.info("checking on {}'s history".format(user))
     print("HEREMEGALUL")
-    conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     path = list(c.execute("select history from users where email=?", (user,)))[0][0]
     print(path)
@@ -113,6 +115,7 @@ class Host(threading.Thread):
 
     def addToQue(self, packet):
         self.outgoing.append(packet)
+
     def read(self):
         data = self.socket.read()
         if not data:
@@ -120,6 +123,8 @@ class Host(threading.Thread):
         iv = data[:16]
         cipher = AES.new(self.key, AES.MODE_CFB, iv)
         return cipher.decrypt(data)[16:].decode()
+
+
     def run(self):
         logging.info("Starting loop")
         while self.authenticated and self.active:
@@ -159,6 +164,25 @@ class Server:
         self.clients = []
         self.active = False
         self.que = []
+        self.to_send = "/home/que.json"
+        self.check_to_send()
+
+
+    def get_client_by_email(self, e):
+        for c in self.clients:
+            if c.email == e:
+                return c
+        return None
+
+
+    def check_to_send(self):
+        with open(self.to_send) as f:
+            data = json.loads(f.read())
+
+        self.que = data["que"]
+
+
+
     def run(self):
         while self.active:
             try:
@@ -169,27 +193,29 @@ class Server:
                 self.clients.append(t)
             except:
                 continue
-    
-    def manageMessages(self):
-        while self.active:
+
+            # add outgoing to que
             for client in self.clients:
-                if len(client.outgoing) > 0:
-                    if client.outgoing[0].type == RECV:
-                        sent = False
-                        for c in self.clients:
-                            if c.email == client.outgoing[0].target:
-                                c.send(client.outgoing[0].construct())
-                                sent = True
-                        if sent:
-                            del client.outgoing[0]
+                self.que += client.outgoing
+                client.outgoing = []
+
+            # check if anyone is online
+            for message in self.que:
+                c = self.get_client_by_email(message.target)
+                if c:
+                    c.send(message.construct())
+                    self.que.remove(c)
      
     def close(self):
         self.active = False
         self.socket.close()
+        with open(self.to_send, 'w') as f:
+            f.write(json.dumps(self.que))
         for i in self.clients:
             i.close()
         for i in self.clients:
             i.join()
+
         os.system("sudo ufw deny {}".format(self.port))
     def start(self):
         t = threading.Thread(target=self.run)
@@ -201,8 +227,9 @@ class Server:
             i.send(msg)
 
 if __name__ == "__main__":
-    server = Server()
-    server.start()
-
-    input()
-    server.close()
+    try:
+        server = Server()
+        server.start()
+        input()
+    except:
+        server.close()
