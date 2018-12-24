@@ -196,6 +196,7 @@ class Server:
 
             # add outgoing to que
             for client in self.clients:
+                print("adding outgoing to que")
                 self.que += client.outgoing
                 client.outgoing = []
 
@@ -210,7 +211,7 @@ class Server:
         self.active = False
         self.socket.close()
         with open(self.to_send, 'w') as f:
-            f.write(json.dumps(self.que))
+            f.write(json.dumps({"que": self.que}))
         for i in self.clients:
             i.close()
         for i in self.clients:
