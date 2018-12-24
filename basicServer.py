@@ -7,7 +7,7 @@ from base64 import b64encode
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto import Random
 from protocal import SND, REQ, STA, parse, RECV, DATA
-import pickle, json, random, string
+import pickle, json, random, string, traceback
 import logging
 
 DATABASE = '/var/www/lccchat/lccchat/lccchat.db'
@@ -234,7 +234,5 @@ if __name__ == "__main__":
         server.start()
         input()
     except Exception as e:
-        logging.error(e)
-        if e == "[Errno 98] Address already in use":
-            quit()
+        traceback.print_exc()
         server.close()
