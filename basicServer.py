@@ -179,7 +179,7 @@ class Server:
         with open(self.to_send) as f:
             data = json.loads(f.read())
 
-        self.que = data["que"]
+        self.que = [parse(n) for n in data["que"]]
 
 
 
@@ -212,7 +212,7 @@ class Server:
         self.active = False
         self.socket.close()
         with open(self.to_send, 'w') as f:
-            f.write(json.dumps({"que": self.que}))
+            f.write(json.dumps({"que": [n.construct() for n in self.que]}))
         for i in self.clients:
             i.close()
         for i in self.clients:
