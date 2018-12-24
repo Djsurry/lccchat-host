@@ -233,5 +233,8 @@ if __name__ == "__main__":
         server = Server()
         server.start()
         input()
-    except:
+    except Exception as e:
+        logging.error(e)
+        if e == "[Errno 98] Address already in use":
+            quit()
         server.close()
