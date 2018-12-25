@@ -180,7 +180,7 @@ class Server:
             data = json.loads(f.read())
 
         self.que = [parse(n) for n in data["que"]]
-        print(self.quo)
+        print(self.que)
 
 
 
