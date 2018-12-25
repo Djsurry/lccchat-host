@@ -95,6 +95,7 @@ class Host(threading.Thread):
             self.active = True
         else:
             self.authenticated = False
+            self.email = None
 
 
     def _send(self, data):
@@ -170,8 +171,9 @@ class Server:
 
     def get_client_by_email(self, e):
         for c in self.clients:
-            if c.email == e:
-                return c
+
+            if c.email == e and c.email:
+                   return c
         return None
 
 
