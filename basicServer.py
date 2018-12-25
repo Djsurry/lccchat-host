@@ -180,6 +180,7 @@ class Server:
             data = json.loads(f.read())
 
         self.que = [parse(n) for n in data["que"]]
+        print(self.quo)
 
 
 
@@ -233,5 +234,4 @@ if __name__ == "__main__":
         server.start()
         input()
     except KeyboardInterrupt:
-        print(self.que)
         server.close()
