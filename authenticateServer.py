@@ -75,6 +75,7 @@ def auth(host):
     a = [int(n) for n in r[1].split()]
     print(7)
     if pubkey in p:
+        print("ASDAS")
         if a[p.index(pubkey)] == 0:
             print("VERIFY NEEDED")
             sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
@@ -95,6 +96,7 @@ def auth(host):
             return key, email
     
     else:
+        print("3123")
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
         host.socket.send("ERR VERIFY {}".format(email))
         print("PUBKEY NOT IN LISTED PUBKEYS")
