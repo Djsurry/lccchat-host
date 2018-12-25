@@ -197,7 +197,6 @@ class Server:
 
             # add outgoing to que
             for client in self.clients:
-                print("adding outgoing to que")
                 self.que += client.outgoing
                 client.outgoing = []
 
@@ -234,4 +233,5 @@ if __name__ == "__main__":
         server.start()
         input()
     except KeyboardInterrupt:
+        print(self.que)
         server.close()
