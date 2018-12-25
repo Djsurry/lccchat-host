@@ -76,6 +76,8 @@ def auth(host):
     print(7)
     if pubkey in p:
         print("ASDAS")
+        print(f"a: {a}")
+        print(f"index: {p.index(pubkey)}")
         if a[p.index(pubkey)] == 0:
             print("VERIFY NEEDED")
             sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
