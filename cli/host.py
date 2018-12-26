@@ -7,7 +7,7 @@ import pickle, sys, os
 from authenticate import auth
 from Crypto import Random
 import threading
-from protocal import parse, SND
+from protocal import parse, SND, RECV, DATA
 
 IP = "167.99.180.229"
 PORT = 12341
