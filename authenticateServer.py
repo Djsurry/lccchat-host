@@ -31,7 +31,7 @@ def verify(email, pubkey):
     pubkeys.append(pubkey)
     hashes.append(''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15)))
     s = [n[0] for n in c.execute('select verified from users where email=?', (email,))][0]
-    s += "0 "
+    s += "0\x20"
     ps = ''
     for i in pubkeys:
         ps += i
@@ -73,6 +73,7 @@ def auth(host):
     print(6)
 
     a = [int(n) for n in r[1].split()]
+    print(f"r1}")
     print(f"p: {p}")
     print(7)
     if pubkey in p:
