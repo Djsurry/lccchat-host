@@ -216,7 +216,6 @@ class Server:
      
     def close(self):
         self.active = False
-        self.socket.shutdown()
         self.socket.close()
 
         with open(self.to_send, 'w') as f:
