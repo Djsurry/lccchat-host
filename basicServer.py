@@ -208,6 +208,7 @@ class Server:
             for message in self.que:
                 c = self.get_client_by_email(message.target)
                 if c:
+                    print("HOST ONLINE. SENDING??")
                     c.send(message.construct())
                     self.que.remove(c)
      
