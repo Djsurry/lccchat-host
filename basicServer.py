@@ -187,6 +187,7 @@ class Server:
 
 
     def run(self):
+        print("running")
         while self.active:
             try:
                 conn, addr = self.socket.accept(blocking=False)
