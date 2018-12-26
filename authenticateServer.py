@@ -73,11 +73,14 @@ def auth(host):
     print(6)
 
     a = [int(n) for n in r[1].split()]
+    print(f"p: {p}")
     print(7)
     if pubkey in p:
         print("ASDAS")
         print(f"a: {a}")
         print(f"index: {p.index(pubkey)}")
+
+        # INDEX ERROR HERE. LIST HAS ONLY ONE ITEM BUT THE INDEX IS 1
         if a[p.index(pubkey)] == 0:
             print("VERIFY NEEDED")
             sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
