@@ -216,8 +216,9 @@ class Server:
      
     def close(self):
         self.active = False
-        self.socket.close()
         self.socket.shutdown()
+        self.socket.close()
+
         with open(self.to_send, 'w') as f:
             f.write(json.dumps({"que": [n.construct() for n in self.que]}))
         for i in self.clients:
