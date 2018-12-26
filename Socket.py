@@ -13,6 +13,7 @@ class Socket:
     def bind(self,addr):
         self.sock.bind(addr)
 
+
     def listen(self,n):
         self.sock.listen(n)
 
@@ -59,4 +60,5 @@ class Socket:
             raise TypeError("msg must be bytes or str not {}".format(type(msg)))
 
     def close(self):
+        self.sock.shutdown()
         self.sock.close()    

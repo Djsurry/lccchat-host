@@ -170,8 +170,9 @@ class Server:
 
 
     def get_client_by_email(self, e):
+        print(f"looking for {e}")
         for c in self.clients:
-
+            print(f"checking {c.email}")
             if c.email == e and c.email:
                    return c
         return None
@@ -207,7 +208,6 @@ class Server:
 
             # check if anyone is online
             for message in self.que:
-                print("looping")
                 c = self.get_client_by_email(message.target)
                 if c:
                     print("HOST ONLINE. SENDING??")
