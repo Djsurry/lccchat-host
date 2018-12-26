@@ -36,7 +36,7 @@ class RECV(Request):
         super().__init__(sender=sender, content=content, target=target)
 
     def construct(self):
-        msg = f'RECV {self.sender} {self.content} {self.target}'
+        msg = f'RECV {self.sender} {self.target} {self.content}'
         return msg
 
 
