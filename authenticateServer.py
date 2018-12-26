@@ -73,7 +73,7 @@ def auth(host):
     print(6)
 
     a = [int(n) for n in r[1].split()]
-    print(f"r1}")
+    print(f"{r1}")
     print(f"p: {p}")
     print(7)
     if pubkey in p:
