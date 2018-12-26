@@ -196,6 +196,7 @@ class Server:
                     t = Host(conn)
                     t.start()
                     self.clients.append(t)
+                    print(f"clients: {self.clients}")
             except:
                 continue
 
@@ -210,7 +211,7 @@ class Server:
                 if c:
                     print("HOST ONLINE. SENDING??")
                     c.send(message.construct())
-                    self.que.remove(c)
+                    self.que.remove(message)
      
     def close(self):
         self.active = False
