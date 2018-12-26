@@ -16,7 +16,7 @@ def verify(email, pubkey):
     e = [n for n in c.execute("select email from users where email=?", (email,))]
     if not e:
         hash = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15))
-        c.execute("insert into users values (?, ?, ?, ?, ?)", (email, pubkey, "0", "", hash))
+        c.execute("insert into users values (?, ?, ?, ?, ?)", (email, pubkey, "0 ", "", hash))
         conn.commit()
         conn.close()
         link = "https://lccchat.me/verify?token={}".format(hash)
@@ -31,7 +31,7 @@ def verify(email, pubkey):
     pubkeys.append(pubkey)
     hashes.append(''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15)))
     s = [n[0] for n in c.execute('select verified from users where email=?', (email,))][0]
-    s += "0:"
+    s += "0 "
     ps = ''
     for i in pubkeys:
         ps += i
