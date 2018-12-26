@@ -71,10 +71,10 @@ def auth(host):
     print(5)
     p = r[0].split(":")
     print(6)
-
-    a = [int(n) for n in r[1].split()]
-    print(f"{r1}")
+    print(f"r1: {r[1]}")
     print(f"p: {p}")
+    a = [int(n) for n in r[1].split()]
+
     print(7)
     if pubkey in p:
         print("ASDAS")
