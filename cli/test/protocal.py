@@ -65,11 +65,13 @@ def parse(data):
 
         classifer = data[:4].decode()
 
-        if classifer != "DATA":
-            return False
-        packet = DATA(data=data[4:])
+        if classifer != b"DATA":
+            data = data.decode()
 
-        return packet
+        else:
+            packet = DATA(data=data[4:])
+
+            return packet
     classifier = data.split()[0]
     if classifier == "REQ":
         packet = REQ(target=data.split()[1])
