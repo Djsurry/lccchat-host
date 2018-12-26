@@ -207,6 +207,7 @@ class Server:
 
             # check if anyone is online
             for message in self.que:
+                print("looping")
                 c = self.get_client_by_email(message.target)
                 if c:
                     print("HOST ONLINE. SENDING??")
