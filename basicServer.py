@@ -162,7 +162,6 @@ class Server:
         self.socket.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(('', self.port))
         self.socket.listen(5)
-        os.system("sudo ufw allow {}".format(self.port))
         self.clients = []
         self.active = False
         self.que = []
@@ -225,8 +224,6 @@ class Server:
             i.close()
         for i in self.clients:
             i.join()
-
-        os.system("sudo ufw deny {}".format(self.port))
     def start(self):
         t = threading.Thread(target=self.run)
         self.active = True
