@@ -233,7 +233,7 @@ class Server:
             i.close()
         for i in self.clients:
             i.join()
-
+    def start(self):
         t = threading.Thread(target=self.run)
         self.active = True
         t.start()
@@ -245,6 +245,6 @@ class Server:
 if __name__ == "__main__":
     try:
         server = Server()
-        server.run()
+        server.start()
     except KeyboardInterrupt:
         server.close()
