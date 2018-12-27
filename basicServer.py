@@ -158,6 +158,7 @@ class Host(threading.Thread):
                 logging.info(f"Sending: {self.que[0]}")
                 self._send(self.que[0])
                 del self.que[0]
+        self.active = False
         self.socket.close()
 
 class Server:
@@ -206,8 +207,11 @@ class Server:
             except:
                 continue
 
-            # add outgoing to que
+            # add outgoing to que + clients dc
             for client in self.clients:
+                if client.active = False:
+                    self.clients.remove(clients)
+                    continue
                 self.que += client.outgoing
                 client.outgoing = []
 
@@ -218,7 +222,7 @@ class Server:
                     print("HOST ONLINE. SENDING??")
                     c.send(message.construct())
                     self.que.remove(message)
-     
+
     def close(self):
         self.active = False
         self.socket.close()
