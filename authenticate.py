@@ -1,9 +1,13 @@
 import time, socket
 from Crypto.Cipher import PKCS1_OAEP
-
+import hashlib
 IP = "167.99.180.229"
 PORT = 12341
-
+def hash_string(string):
+    """
+    Return a SHA-256 hash of the given string
+    """
+    return hashlib.sha256(string.encode('utf-8')).hexdigest()
 def auth(user):
     # MAKING SURE SERVER IS UP
     try:

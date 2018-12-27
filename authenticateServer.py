@@ -1,5 +1,5 @@
 
-import time, socket, string, random, sqlite3, os, struct
+import time, socket, string, random, sqlite3, os, struct, hashlib
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
 from base64 import b64encode
@@ -8,21 +8,25 @@ from Email import sendEmail
 
 IP = "167.99.180.229"
 PORT = 12341
-  
+def hash_string(string):
+    """
+    Return a SHA-256 hash of the given string
+    """
+    return hashlib.sha256(string.encode('utf-8')).hexdigest()
 
 def verify(email, pubkey):
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
-    e = [n for n in c.execute("select email from users where email=?", (email,))]
+    e = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
     if not e:
         hash = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15))
-        c.execute("insert into users values (?, ?, ?, ?, ?)", (email, pubkey, "0 ", "", hash))
+        c.execute("insert into users values (?, ?, ?, ?, ?)", (hash_string(email), pubkey, "0 ", "", hash))
         conn.commit()
         conn.close()
         link = "https://lccchat.me/verify?token={}".format(hash)
         return link
 
-    users = [n for n in c.execute("select pubkey, hash from users where email=?", (email,))][0]
+    users = [n for n in c.execute("select pubkey, hash from users where email=?", (hash_string(email),))][0]
     pubkeys = users[0].split(':')
     hashes = users[1].split(' ')
     if pubkey in pubkeys:
@@ -30,7 +34,7 @@ def verify(email, pubkey):
         return "https://lccchat.me/verify?token={}".format(hashes[pubkeys.index(pubkey)])
     pubkeys.append(pubkey)
     hashes.append(''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15)))
-    s = [n[0] for n in c.execute('select verified from users where email=?', (email,))][0]
+    s = [n[0] for n in c.execute('select verified from users where email=?', (hash_string(email),))][0]
     s += "0 "
     ps = ''
     for i in pubkeys:
@@ -40,7 +44,7 @@ def verify(email, pubkey):
     for i in hashes:
         hs += i
         hs += ' '
-    c.execute('update users set hash = ?, pubkey = ?, verified = ? where email=?', (hs, ps, s, email))
+    c.execute('update users set hash = ?, pubkey = ?, verified = ? where email=?', (hs, ps, s, hash_string(email)))
     conn.commit()
     conn.close()
     return "https://lccchat.me/verify?token={}".format(hashes[-1])
@@ -57,7 +61,7 @@ def auth(host):
     #     print("EMAIL OR PUBKEY NOT SENT")
     #     return False
     
-    a = [n for n in c.execute("select email from users where email=?", (email,))]
+    a = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
     print(3)
     if not a:
 
@@ -66,7 +70,7 @@ def auth(host):
         print("NOT ON RECORD")
         return False
     print(4)
-    r = [n for n in c.execute("select pubkey, verified from users where email=?", (email,))][0]
+    r = [n for n in c.execute("select pubkey, verified from users where email=?", (hash_string(email),))][0]
     print(f"r1: {r}")
     print(5)
     p = r[0].split(":")

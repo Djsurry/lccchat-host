@@ -8,7 +8,7 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto import Random
 from protocal import SND, REQ, STA, parse, RECV, DATA
 import pickle, json, random, string, traceback
-import logging
+import logging, hashlib
 
 DATABASE = '/var/www/lccchat/lccchat/lccchat.db'
 
@@ -20,6 +20,11 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 # 1. CHECK DATA PACKET
 # 2. MAKE UI
 
+def hash_string(string):
+    """
+    Return a SHA-256 hash of the given string
+    """
+    return hashlib.sha256(string.encode('utf-8')).hexdigest()
 
 def getHistory(user, recv):
     print('LOL')
@@ -217,14 +222,14 @@ class Server:
     def close(self):
         self.active = False
         self.socket.close()
-
+        print("Closing... ")
         with open(self.to_send, 'w') as f:
             f.write(json.dumps({"que": [n.construct() for n in self.que]}))
         for i in self.clients:
             i.close()
         for i in self.clients:
             i.join()
-    def start(self):
+
         t = threading.Thread(target=self.run)
         self.active = True
         t.start()

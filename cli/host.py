@@ -6,7 +6,7 @@ from Socket import Socket
 import pickle, sys, os
 from authenticate import auth
 from Crypto import Random
-import threading
+import threading, hashlib
 from protocal import parse, SND, RECV, DATA
 
 IP = "167.99.180.229"
