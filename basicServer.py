@@ -209,8 +209,8 @@ class Server:
 
             # add outgoing to que + clients dc
             for client in self.clients:
-                if client.active = False:
-                    self.clients.remove(clients)
+                if client.active == False:
+                    self.clients.remove(client)
                     continue
                 self.que += client.outgoing
                 client.outgoing = []
