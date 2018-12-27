@@ -101,6 +101,7 @@ class Host(threading.Thread):
         else:
             self.authenticated = False
             self.email = None
+            self.active = False
 
 
     def _send(self, data):
