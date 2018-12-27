@@ -17,8 +17,8 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 ["SND email msg", "REQ email", "STA bool"]
 
 # TO DO
-# 1. CHECK FOR CLIENTS WHO HAVE DISCONNECTED AND MAKE active=False
-# 2. debug
+# 1. CHECK DATA PACKET
+# 2. MAKE UI
 
 
 def getHistory(user, recv):
@@ -159,6 +159,7 @@ class Server:
     def __init__(self):
         self.port = 12341
         self.socket = Socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+        self.socket.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(('', self.port))
         self.socket.listen(5)
         os.system("sudo ufw allow {}".format(self.port))
