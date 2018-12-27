@@ -83,6 +83,7 @@ def addToHistroy(user, recv, msg):
 
 class Host(threading.Thread):
     def __init__(self, conn):
+        self.active = True
         super().__init__()
         print("CREATED")
         self.socket = conn
