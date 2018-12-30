@@ -44,7 +44,7 @@ class RECV(Request):
 class DATA(Request):
     def __init__(self, data=None):
         self.type = DATA
-        super().__init__(raw=data)
+        super().__init__(data=data)
 
     def construct(self):
         msg = b'DATA' + pickle.dumps(self.data)
