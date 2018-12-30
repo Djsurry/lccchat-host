@@ -70,7 +70,7 @@ def parse(data):
             data = data.decode()
 
         else:
-            packet = DATA(data=data[4:])
+            packet = DATA(data=data[:4])
 
             return packet
     classifier = data.split()[0]

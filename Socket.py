@@ -1,64 +1,96 @@
-import socket, struct, select
-
-class Socket:
-    def __init__(self,s=None):
-        '''default create a new socket, or wrap an existing one.
-        '''
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) if s is None else s
-        
-
-    def connect(self,addr):
-        self.sock.connect(addr)
-
-    def bind(self,addr):
-        self.sock.bind(addr)
+import pickle
 
 
-    def listen(self,n):
-        self.sock.listen(n)
+class Request:
+    def __init__(self, target=None, content=None, data=None, status=None, sender=None):
+        self.target = target
+        self.content = content
+        self.data = data
+        self.raw = pickle.dumps(self.data) if self.data else None
+        self.status = status
+        self.sender = sender
 
-    def accept(self, blocking=False):
-        if blocking:
-            c,a = self.sock.accept()
-            # Wrap the client socket in a Socket.
-            return Socket(c),a
-        if self.bufferedData():
-            c, a = self.sock.accept()
-            # Wrap the client socket in a Socket.
-            return Socket(c), a
+
+
+class STA(Request):
+    def __init__(self, status=False):
+        self.type = STA
+        super().__init__(status=status)
+
+    def construct(self):
+        msg = f'STA {self.status}'
+
+
+class SND(Request):
+    def __init__(self, target=None, content=None):
+        self.type = SND
+        super().__init__(target=target, content=content)
+
+    def construct(self):
+        msg = f'SND {self.target} {self.content}'
+        return msg
+
+
+class RECV(Request):
+    def __init__(self, sender=None, content=None, target=None):
+        self.type = RECV
+        super().__init__(sender=sender, content=content, target=target)
+
+    def construct(self):
+        msg = f'RECV {self.sender} {self.target} {self.content}'
+        return msg
+
+
+class DATA(Request):
+    def __init__(self, data=None):
+        self.type = DATA
+        super().__init__(data=data)
+
+    def construct(self):
+        msg = b'DATA' + pickle.dumps(self.data)
+        return msg
+
+
+class REQ(Request):
+    def __init__(self, target=None):
+        self.type = REQ
+        super().__init__(target=target)
+
+    def construct(self):
+        msg = f'REQ {self.target}'
+        return msg
+
+
+def parse(data):
+    if type(data) == bytes:
+
+        classifer = data[:4].decode()
+
+        if classifer != b"DATA":
+            data = data.decode()
+
         else:
-            return None, None
+            packet = DATA(data=data[:4])
 
-    def bufferedData(self):
-        r, _, _ = select.select([self.sock], [], [], 0)
-        if r:
-            return True
-        return False
-        
-    def read(self, blocking = False):
-        r, _, _ = select.select([self.sock], [], [], 0)
-        if not r and not blocking:
-            return None
-        l = self.sock.recv(struct.calcsize("I"))
-        if not l:
+            return packet
+    classifier = data.split()[0]
+    if classifier == "REQ":
+        packet = REQ(target=data.split()[1])
+    elif classifier == "RECV":
+        packet = RECV(sender=data.split()[1], target=data.split()[2], content=' '.join(data.split()[3:]))
+    elif classifier == "SND":
+        packet = SND(target=data.split()[1], content=' '.join(data.split()[2:]))
+    elif classifier == "STA":
+        packet = STA(status=data.split()[1])
+    return packet
 
-            return None
-        length = struct.unpack("I", l)[0]
 
-        msg = self.sock.recv(length)
-        try:
-            return msg.decode()
-        except UnicodeDecodeError:
-            return msg
+d = pickle.dumps({"some cool stuff": ["wow", "this", "is", "a", "list", "pog"]})
 
-    def send(self,msg):
-        if type(msg) == str:
-            self.sock.sendall(struct.pack("I", len(msg.encode())) + msg.encode())
-        elif type(msg) == bytes:
-            self.sock.sendall(struct.pack("I", len(msg)) + msg)
-        else:
-            raise TypeError("msg must be bytes or str not {}".format(type(msg)))
+data = b"DATA" + d
+if __name__ == "__main__":
+    packet = parse(data)
+    print(packet.data)
 
-    def close(self):
-        self.sock.shutdown(socket.SHUT_RDWR)
-        self.sock.close()    
+
+
