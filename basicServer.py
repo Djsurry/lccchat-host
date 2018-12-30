@@ -227,7 +227,6 @@ class Server:
                     print("HOST ONLINE. SENDING??")
                     c.send(message.construct())
                     self.que.remove(message)
-            print('here')
             if self.last_clients != len(self.clients):
                 self.last_clients = len(self.clients)
                 print("CLIENTS CHANGES, NOW {}".format(self.last_clients))
