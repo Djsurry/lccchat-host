@@ -7,7 +7,7 @@ import pickle, sys, os
 from authenticate import auth
 from Crypto import Random
 import threading
-from protocal import parse, SND, DATA
+from protocal import parse, SND, DATA, REQ
 IP = "167.99.180.229"
 PORT = 12341
 
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     user.start()
     print(1)
-    user.send(SND(target='dsurry@wearelcc.ca', content='Hello david u r the best ow player'))
+    user.send(REQ(target=user.email))
     print(2)
     input()
     user.close()
