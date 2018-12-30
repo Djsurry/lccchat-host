@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     user.start()
     print(1)
-    user.send(SND(target='dsurry@wearelcc.ca', content='Hello david u r the best ow player').construct())
+    user.send(SND(target='dsurry@wearelcc.ca', content='Hello david u r the best ow player'))
     print(2)
     input()
     user.close()

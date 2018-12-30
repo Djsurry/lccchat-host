@@ -30,8 +30,8 @@ def getHistory(user, recv):
     print('LOL')
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
-    logging.info("THE THING: {}".format(list(c.execute("select history from users where email=?", (user,)))))
-    path = list(c.execute("select history from users where email=?", (user,)))[0][0]
+    logging.info("THE THING: {}".format(list(c.execute("select history from users where email=?", (hash_string(user),)))))
+    path = list(c.execute("select history from users where email=?", (hash_string(user),)))[0][0]
     history = json.load(open(path, "r+"))
     conn.close()
     if recv not in history.keys():
@@ -44,10 +44,10 @@ def addToHistroy(user, recv, msg):
     print("HEREMEGALUL")
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
-    path = list(c.execute("select history from users where email=?", (user,)))[0][0]
+    path = list(c.execute("select history from users where email=?", (hash_string(user),)))[0][0]
     print(path)
     print("logged")
-    logging.info("adding : {}".format(list(c.execute("select history from users where email=?", (user,)))))
+    logging.info("adding : {}".format(list(c.execute("select history from users where email=?", (hash_string(user),)))))
     logging.info(path)
     try:
         history = json.load(open(path, 'r+'))
@@ -60,15 +60,15 @@ def addToHistroy(user, recv, msg):
     with open(path, 'w+') as f:
         f.write(json.dumps(history))
     logging.info(f"RECV: {recv}")
-    if not list(c.execute("select history from users where email=?", (recv,))) and list(c.execute("select * from users where email=?", (recv,))):
+    if not list(c.execute("select history from users where email=?", (hash_string(recv),))) and list(c.execute("select * from users where email=?", (hash_string(recv),))):
         addr = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-        c.execute('update users set history="/home/histories/{}.json" WHERE email=?'.format(addr), (recv,))
+        c.execute('update users set history="/home/histories/{}.json" WHERE email=?'.format(addr), (hash_string(recv),))
         conn.commit()
     else:
         addr = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-        c.execute("insert into users values (?, '', '', ?, '')", (recv, f"/home/histories/{addr}.json"))
+        c.execute("insert into users values (?, '', '', ?, '')", (hash_string(recv), f"/home/histories/{addr}.json"))
         conn.commit()
-    path = list(c.execute("select history from users where email=?", (recv,)))[0][0]
+    path = list(c.execute("select history from users where email=?", (hash_string(recv),)))[0][0]
     try:
         history = json.load(open(path, 'r+'))
     except:
