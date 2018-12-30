@@ -35,6 +35,7 @@ def verify(email, pubkey):
     hashes = users[1].split(' ')
     if pubkey in pubkeys:
         conn.close()
+        print(213123123123121)
         return "https://lccchat.me/verify?token={}".format(hashes[pubkeys.index(pubkey)])
     pubkeys.append(pubkey)
     hashes.append(''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15)))
