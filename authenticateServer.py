@@ -73,7 +73,7 @@ def auth(host):
     r = [n for n in c.execute("select pubkey, verified from users where email=?", (hash_string(email),))][0]
     print(f"r1: {r}")
     print(5)
-    p = r[0].split(":")
+    p = [n for n in r[0].split(":") if n]
     print(6)
     print(f"r1: {r[1]}")
     print(f"p: {p}")
