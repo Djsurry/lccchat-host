@@ -253,5 +253,5 @@ if __name__ == "__main__":
     try:
         server = Server()
         server.start()
-    except KeyboardInterrupt:
+    except:
         server.close()
