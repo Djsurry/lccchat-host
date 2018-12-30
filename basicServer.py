@@ -162,6 +162,7 @@ class Host(threading.Thread):
                 logging.info(f"Sending: {self.que[0]}")
                 self._send(self.que[0])
                 del self.que[0]
+        print("Closing")
         self.active = False
         self.socket.close()
 
@@ -213,6 +214,7 @@ class Server:
             # add outgoing to que + clients dc
             for client in self.clients:
                 if client.active == False:
+                    print("REMOVING {}".format(client))
                     self.clients.remove(client)
                     continue
                 self.que += client.outgoing
