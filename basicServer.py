@@ -162,7 +162,7 @@ class Host(threading.Thread):
                 logging.info(f"Sending: {self.que[0]}")
                 self._send(self.que[0])
                 del self.que[0]
-        print("Closing")
+
         self.active = False
         self.socket.close()
 
@@ -227,7 +227,7 @@ class Server:
                     print("HOST ONLINE. SENDING??")
                     c.send(message.construct())
                     self.que.remove(message)
-
+            print('here')
             if self.last_clients != len(self.clients):
                 self.last_clients = len(self.clients)
                 print("CLIENTS CHANGES, NOW {}".format(self.last_clients))
