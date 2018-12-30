@@ -8,17 +8,21 @@ from Email import sendEmail
 
 IP = "167.99.180.229"
 PORT = 12341
+
+
 def hash_string(string):
     """
     Return a SHA-256 hash of the given string
     """
     return hashlib.sha256(string.encode('utf-8')).hexdigest()
 
+
 def verify(email, pubkey):
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
     e = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
     if not e:
+        print("MAKING NEW ENTRY")
         hash = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15))
         c.execute("insert into users values (?, ?, ?, ?, ?)", (hash_string(email), pubkey, "0 ", "", hash))
         conn.commit()
@@ -85,7 +89,6 @@ def auth(host):
         print(f"a: {a}")
         print(f"index: {p.index(pubkey)}")
 
-        # INDEX ERROR HERE. LIST HAS ONLY ONE ITEM BUT THE INDEX IS 1
         if a[p.index(pubkey)] == 0:
             print("VERIFY NEEDED")
             sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
