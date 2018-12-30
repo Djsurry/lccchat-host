@@ -59,6 +59,7 @@ def addToHistroy(user, recv, msg):
         history[recv] = [(True, msg)]
     with open(path, 'w+') as f:
         f.write(json.dumps(history))
+
     logging.info(f"RECV: {recv}")
     if not list(c.execute("select history from users where email=?", (hash_string(recv),))) and list(c.execute("select * from users where email=?", (hash_string(recv),))):
         addr = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
@@ -165,6 +166,7 @@ class Host(threading.Thread):
 
 class Server:
     def __init__(self):
+        self.last_clients = -1
         self.port = 12341
         self.socket = Socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
         self.socket.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -225,6 +227,9 @@ class Server:
                     c.send(message.construct())
                     self.que.remove(message)
 
+            if self.last_clients != len(self.clients):
+                self.last_clients = len(self.clients)
+                print("CLIENTS CHANGES, NOW {}".format(self.last_clients))
     def close(self):
         self.active = False
         self.socket.close()
