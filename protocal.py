@@ -2,13 +2,14 @@ import pickle
 
 
 class Request:
-    def __init__(self, target=None, content=None, raw=None, status=None, sender=None):
+    def __init__(self, target=None, content=None, data=None, status=None, sender=None):
         self.target = target
         self.content = content
-        self.raw = raw
+        self.data = data
+        self.raw = pickle.dumps(self.data) if self.data else None
         self.status = status
         self.sender = sender
-        self.data = pickle.loads(self.raw) if self.raw else None
+
 
 
 class STA(Request):
