@@ -83,8 +83,9 @@ def addToHistroy(user, recv, msg):
     conn.close()
 
 class Host(threading.Thread):
-    def __init__(self, conn):
+    def __init__(self, conn, server):
         self.active = True
+        self.server = server
         super().__init__()
         print("CREATED")
         self.socket = conn
@@ -136,7 +137,7 @@ class Host(threading.Thread):
 
     def run(self):
         logging.info("Starting loop")
-        while self.authenticated and self.active:
+        while self.authenticated and self.active and self.server.active:
 
             if self.socket.bufferedData():
                 data = self.read()
@@ -180,9 +181,7 @@ class Server:
 
 
     def get_client_by_email(self, e):
-        print(f"looking for {e}")
         for c in self.clients:
-            print(f"checking {c.email}")
             if c.email == e and c.email:
                    return c
         return None
@@ -204,7 +203,7 @@ class Server:
                 conn, addr = self.socket.accept(blocking=False)
                 if conn:
                     logging.info(f"Connected to {addr}")
-                    t = Host(conn)
+                    t = Host(conn, self)
                     t.start()
                     self.clients.append(t)
                     print(f"clients: {self.clients}")
