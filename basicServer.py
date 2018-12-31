@@ -35,7 +35,7 @@ def getHistory(user, recv):
     history = json.load(open(path, "r+"))
     print(f"HISTORY: {history}")
     conn.close()
-    if recv not in history.keys()]:
+    if recv not in history.keys():
         return []
     else:
         return history[recv]
