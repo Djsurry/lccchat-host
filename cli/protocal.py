@@ -5,8 +5,8 @@ class Request:
     def __init__(self, target=None, content=None, data=None, status=None, sender=None):
         self.target = target
         self.content = content
-        self.data = data
-        self.raw = pickle.dumps(self.data) if self.data else None
+        self.raw = data
+        self.data = pickle.loads(self.raw) if self.raw else None
         self.status = status
         self.sender = sender
 
@@ -64,13 +64,13 @@ class REQ(Request):
 def parse(data):
     if type(data) == bytes:
 
-        classifer = data[:4].decode()
+        classifer = data[:4]
 
         if classifer != b"DATA":
             data = data.decode()
 
         else:
-            packet = DATA(data=data[:4])
+            packet = DATA(data=data[4:])
 
             return packet
     classifier = data.split()[0]

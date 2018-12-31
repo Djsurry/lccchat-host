@@ -34,7 +34,7 @@ def getHistory(user, recv):
     path = list(c.execute("select history from users where email=?", (hash_string(user),)))[0][0]
     history = json.load(open(path, "r+"))
     conn.close()
-    if recv not in history.keys():
+    if recv not in [hash_string(n) for n in history.keys()]:
         return {recv: []}
     else:
         return history[recv]

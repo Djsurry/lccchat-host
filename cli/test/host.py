@@ -7,12 +7,13 @@ import pickle, sys, os
 from authenticate import auth
 from Crypto import Random
 import threading
-from protocal import parse, SND, DATA, REQ
+from protocal import parse, SND, DATA, REQ, RECV
 IP = "167.99.180.229"
 PORT = 12341
 
 class User:
     def __init__(self):
+        self.currentScreen = None
         # LOADING KEYS
         try:
             data = pickle.load(open("data/spt/usr.pickle", "rb"))
@@ -91,8 +92,7 @@ class User:
                     if self.currentScreen == packet.sender:
                         self.updateScreen()
                 elif packet.type == DATA:
-                    if self.currentScreen == packet.data.keys()[0]:
-                        self.updateScreen(packet=packet)
+                    print(f"DATA: {packet.data}")
                     
                 self.close()
             if len(self.que) > 0:
