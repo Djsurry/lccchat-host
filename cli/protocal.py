@@ -2,13 +2,17 @@ import pickle
 
 
 class Request:
-    def __init__(self, target=None, content=None, data=None, status=None, sender=None):
+    def __init__(self, target=None, content=None, data=None, status=None, sender=None, raw=None):
         self.target = target
         self.content = content
-        self.raw = data
-        self.data = pickle.loads(self.raw) if self.raw else None
         self.status = status
         self.sender = sender
+        self.raw = raw
+        self.data = data
+        if self.raw:
+            self.data = pickle.loads(self.raw)
+        elif self.data:
+            self.raw = pickle.dumps(self.data)
 
 
 
@@ -42,9 +46,9 @@ class RECV(Request):
 
 
 class DATA(Request):
-    def __init__(self, data=None):
+    def __init__(self, data=None, raw=None):
         self.type = DATA
-        super().__init__(data=data)
+        super().__init__(data=data, raw=raw)
 
     def construct(self):
         msg = b'DATA' + pickle.dumps(self.data)
