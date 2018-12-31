@@ -14,11 +14,16 @@ DATABASE = '/var/www/lccchat/lccchat/lccchat.db'
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
-["SND email msg", "REQ email", "STA bool"]
 
-# TO DO
-# 1. CHECK DATA PACKET
-# 2. MAKE UI
+
+#######################################################################
+#      TO DO                                                          #
+#      1. MAKE HISTORIES USE HASHED EMAILS                            #
+#      2. CLIENT IS REMOVED AFTER DATA PACKET IS SUCCESSFULLY SENT    #
+#      2. MAKE UI                                                     #
+#######################################################################
+
+
 
 def hash_string(string):
     """
