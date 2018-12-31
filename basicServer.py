@@ -27,19 +27,20 @@ def hash_string(string):
     return hashlib.sha256(string.encode('utf-8')).hexdigest()
 
 def getHistory(user, recv):
-    print('LOL')
+    print(f'RECV: {recv}')
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     logging.info("THE THING: {}".format(list(c.execute("select history from users where email=?", (hash_string(user),)))))
     path = list(c.execute("select history from users where email=?", (hash_string(user),)))[0][0]
     history = json.load(open(path, "r+"))
+    print(f"HISTORY: {history}")
     conn.close()
     if recv not in [hash_string(n) for n in history.keys()]:
         return []
     else:
         return history[recv]
 
-def addToHistroy(user, recv, msg):
+def add_to_history(user, recv, msg):
     logging.info("checking on {}'s history".format(user))
     print("HEREMEGALUL")
     conn = sqlite3.connect(DATABASE)
@@ -155,7 +156,7 @@ class Host(threading.Thread):
                     msg = packet.content
                     target = packet.target
                     new = RECV(sender=self.email, content=msg, target=target)
-                    addToHistroy(new.sender, new.target, new.content)
+                    add_to_history(new.sender, new.target, new.content)
                     self.addToQue(new)
 
             if len(self.que) > 0:

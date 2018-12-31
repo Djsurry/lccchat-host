@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     user.start()
     print(1)
-    user.send(REQ(target=user.email))
+    user.send(REQ(target='dsurry@wearelcc.ca'))
     print(2)
     input()
     user.close()
