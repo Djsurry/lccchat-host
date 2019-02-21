@@ -258,7 +258,9 @@ class Server:
             i.send(msg)
 
 if __name__ == "__main__":
+    try:
+        server = Server()
+        input()
+    except:
 
-    server = Server()
-    input()
-    server.close()
+        server.close()

@@ -1,5 +1,5 @@
 
-import time, socket, string, random, sqlite3, os, struct, hashlib
+import time, socket, string, random, sqlite3, os, struct, hashlib, sys
 from Crypto.Cipher import AES
 from Crypto.PublicKey import RSA
 from base64 import b64encode
@@ -22,7 +22,7 @@ def verify(email, pubkey):
     c = conn.cursor()
     e = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
     if not e:
-        print("MAKING NEW ENTRY")
+        sys.stdout.write("MAKING NEW ENTRY")
         hash = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15))
         c.execute("insert into users values (?, ?, ?, ?, ?)", (hash_string(email), pubkey, "0 ", "", hash))
         conn.commit()
@@ -35,7 +35,7 @@ def verify(email, pubkey):
     hashes = users[1].split(' ')
     if pubkey in pubkeys:
         conn.close()
-        print(213123123123121)
+        sys.stdout.write(213123123123121)
         return "https://lccchat.me/verify?token={}".format(hashes[pubkeys.index(pubkey)])
     pubkeys.append(pubkey)
     hashes.append(''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=15)))
@@ -57,48 +57,59 @@ def verify(email, pubkey):
 def auth(host):
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
-    print("STARTING AUTH PROCESS")
+    sys.stdout.write("STARTING AUTH PROCESS")
+    sys.stdout.flush()
     email = host.socket.read(blocking=True)
-    print(1)
+    sys.stdout.write(1)
+    sys.stdout.flush()
     pubkey = host.socket.read(blocking=True)
-    print(2)
+    sys.stdout.write(2)
+    sys.stdout.flush()
     # if not email or not pubkey:
-    #     print("EMAIL OR PUBKEY NOT SENT")
+    #     sys.stdout.write("EMAIL OR PUBKEY NOT SENT")
     #     return False
     
     a = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
-    print(3)
+    sys.stdout.write(3)
+    sys.stdout.flush()
     if not a:
 
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
         host.socket.send("ERR VERIFY {}".format(email))
-        print("NOT ON RECORD")
+        sys.stdout.write("NOT ON RECORD")
         return False
-    print(4)
+    sys.stdout.write(4)
+    sys.stoud.flush()
     r = [n for n in c.execute("select pubkey, verified from users where email=?", (hash_string(email),))][0]
-    print(f"r1: {r}")
-    print(5)
+    sys.stdout.write(f"r1: {r}")
+    sys.stdout.write(5)
+    sys.stdout.flush()
     p = [n for n in r[0].split(":") if n]
-    print(6)
-    print(f"r1: {r[1]}")
-    print(f"p: {p}")
+    sys.stdout.write(6)
+    sys.stdout.write(f"r1: {r[1]}")
+    sys.stdout.write(f"p: {p}")
+    sys.stdout.flush()
     a = [int(n) for n in r[1].split()]
 
-    print(7)
+    sys.stdout.write(7)
+    sys.stdout.flush()
     if pubkey in p:
-        print("ASDAS")
-        print(f"a: {a}")
-        print(f"index: {p.index(pubkey)}")
+        sys.stdout.write("ASDAS")
+        sys.stdout.write(f"a: {a}")
+        sys.stdout.write(f"index: {p.index(pubkey)}")
+        sys.stdout.flush()
 
         if a[p.index(pubkey)] == 0:
-            print("VERIFY NEEDED")
+            sys.stdout.write("VERIFY NEEDED")
+            sys.stdout.flush()
             sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
             host.socket.send("ERR VERIFY {}".format(email))
             return False
         else:
 
             key = os.urandom(16)
-            print(key)
+            sys.stdout.write(key)
+            sys.stdout.flush()
             cipher = PKCS1_OAEP.new(RSA.importKey(pubkey))
 
             ciphertext = cipher.encrypt(key)
@@ -106,13 +117,16 @@ def auth(host):
             host.socket.send(b"VER KEY")
             host.socket.send(ciphertext)
 
-            print("SENT KEY")
+            sys.stdout.write("SENT KEY")
+            sys.stdout.write()
             return key, email
     
     else:
-        print("3123")
+        sys.stdout.write("3123")
+        sys.stdout.flush()
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
         host.socket.send("ERR VERIFY {}".format(email))
-        print("PUBKEY NOT IN LISTED PUBKEYS")
+        sys.stdout.write("PUBKEY NOT IN LISTED PUBKEYS")
+        sys.stdout.flush()
         return False
     
