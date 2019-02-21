@@ -3,54 +3,40 @@ from Crypto.Cipher import AES
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from Socket import Socket
-import pickle, sys, os
+import pickle, sys, os, time
 from authenticate import auth
 from Crypto import Random
-import threading
-from protocal import parse, SND, DATA, REQ, RECV
+import threading, hashlib
+from protocal import parse, SND, RECV, DATA
+
 IP = "167.99.180.229"
 PORT = 12341
 
-class User:
-    def __init__(self):
-        self.currentScreen = None
-        # LOADING KEYS
-        try:
-            data = pickle.load(open("data/spt/usr.pickle", "rb"))
-            self.privkey = RSA.importKey(data["key"])
-            self.pubkey = self.privkey.publickey()
-            self.email = data["email"]
 
-        except FileNotFoundError:
-            while True:
-                self.privkey = RSA.generate(2048)
-                if ':' not in self.privkey.exportKey().decode():
-                    break
+class Network:
+    def __init__(self, pubkey, privkey, email):
 
-        
-            self.pubkey = self.privkey.publickey()
-            while True:
-                self.email = input("Email: ")
-                if "@wearelcc.ca" in self.email and len(self.email.split("@")[0]) > 2:
-                    break
-                print("Please enter a valid LCC email")
-            os.system("mkdir data && cd data/ && mkdir spt && touch spt/usr.pickle")
-            with open("data/spt/usr.pickle", 'wb') as f:
-                pickle.dump({"key": self.privkey.exportKey("PEM"), "email": self.email}, f)
-         
+        self.pubkey = pubkey
+        self.privkey = privkey
+        self.email = email
         self.sock = Socket()
         self.authenticated = True
         resp = auth(self)
         if not resp[0]:
             self.authenticated = False
             print("Error in connecting {}".format(resp[1]))
-            self.sock.close()
+            try:
+                self.sock.close()
+            except OSError:
+                pass
             sys.exit(1)
+
         self.key = resp[1]
         print(f"KEY: {self.key}")
         self.active = True
         self.que = []
         print("finished")
+
     def _send(self, data):
         iv = Random.new().read(AES.block_size)
         print("sending {}".format(data))
@@ -60,15 +46,15 @@ class User:
         except AttributeError:
             msg = iv + cipher.encrypt(data)
         self.sock.send(msg)
-    
+
     def send(self, msg):
         self.que.append(msg)
 
     def close(self):
-        
+
         self.active = False
 
-    def read(self, blocking = False):
+    def read(self, blocking=False):
         data = self.sock.read(blocking=blocking)
         if data:
             iv = data[:16]
@@ -76,10 +62,11 @@ class User:
             return cipher.decrypt(data)[16:]
         else:
             return None
+
     def loop(self):
         print("starting {0} {1}".format(self.authenticated, self.active))
         while self.authenticated and self.active:
-           
+
             if self.sock.bufferedData():
                 data = self.read()
                 print(f"Recevied: {data}")
@@ -92,14 +79,17 @@ class User:
                     if self.currentScreen == packet.sender:
                         self.updateScreen()
                 elif packet.type == DATA:
-                    print(f"DATA: {packet.data}")
-                    
-                
+                    if self.currentScreen == packet.data.keys()[0]:
+                        self.updateScreen(packet=packet)
+
+                self.close()
             if len(self.que) > 0:
                 print(f"Sending: {self.que[0]}")
                 self._send(self.que[0].construct())
                 del self.que[0]
+        print('finished loop')
         self.sock.close()
+
     def getInput(self):
         while self.active and self.authenticated:
             target = input("Who would you like to text: ")
@@ -108,24 +98,55 @@ class User:
                 data = self.read(blocking=True)
                 if data:
                     pickle.loads(data.decode())
-    def updateScreen(packet=None):
+
+    def updateScreen(self, packet=None):
         if packet:
             self.currentScreen = packet.data.keys()[0]
-            
+
     def start(self):
         t1 = threading.Thread(target=self.loop)
         t1.start()
 
 
+
+class User:
+    def __init__(self):
+        # LOADING KEYS
+        self.thread = None
+        try:
+            data = pickle.load(open("data/spt/usr.pickle", "rb"))
+            self.privkey = RSA.importKey(data["key"])
+            self.pubkey = self.privkey.publickey()
+            self.email = data["email"]
+
+        except FileNotFoundError:
+            while True:
+                self.privkey = RSA.generate(2048)
+                if ':' not in self.privkey.exportKey().decode():
+                    break
+
+            self.pubkey = self.privkey.publickey()
+            while True:
+                self.email = input("Email: ")
+                if "@wearelcc.ca" in self.email and len(self.email.split("@")[0]) > 2:
+                    break
+                print("Please enter a valid LCC email")
+            os.system("mkdir data && cd data/ && mkdir spt && touch spt/usr.pickle")
+            with open("data/spt/usr.pickle", 'wb') as f:
+                pickle.dump({"key": self.privkey.exportKey("PEM"), "email": self.email}, f)
+        self.network = Network(self.pubkey, self.privkey, self.email)
+
+    def stop(self):
+        self.network.close()
+        self.thread.join()
+
+    def start(self):
+        self.thread = threading.Thread(target=self.network.loop)
+        self.thread.start()
+
+
 if __name__ == "__main__":
     user = User()
-
     user.start()
-    print(1)
-    user.send(REQ(target='dsurry@wearelcc.ca'))
-    user.send(SND(target='dsurry@wearelcc.ca', content='hello david i am so bad at ow'))
-    print(2)
-    input()
-    user.close()
-    
-    
+    time.sleep(1)
+    user.stop()
