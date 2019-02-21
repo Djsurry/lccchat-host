@@ -15,14 +15,13 @@ DATABASE = '/var/www/lccchat/lccchat/lccchat.db'
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 
-
 #######################################################################
 #      TO DO                                                          #
-#      1. MAKE HISTORIES USE HASHED EMAILS                            #
-#      2. CLIENT IS REMOVED AFTER DATA PACKET IS SUCCESSFULLY SENT    #
-#      2. MAKE UI                                                     #
+#      1. FIGURE OUT A WAY TO ALLOW MESSAGES TO BE SENT AND RECEIVED  #
+#      WHILE IN UI. THIS SHOULD INCLUDE NOTIFCATIONS FOR NEW MESSAGES #
+#      3. MAKE UI                                                     #
+#      4. MAKE DB CLASS                                               #
 #######################################################################
-
 
 
 def hash_string(string):
@@ -30,6 +29,7 @@ def hash_string(string):
     Return a SHA-256 hash of the given string
     """
     return hashlib.sha256(string.encode('utf-8')).hexdigest()
+
 
 def getHistory(user, recv):
     print(f'RECV: {recv}')
@@ -44,6 +44,7 @@ def getHistory(user, recv):
         return []
     else:
         return history[recv]
+
 
 def add_to_history(user, recv, msg):
     logging.info("checking on {}'s history".format(user))
@@ -88,6 +89,7 @@ def add_to_history(user, recv, msg):
         f.write(json.dumps(history))
     conn.close()
 
+
 class Host(threading.Thread):
     def __init__(self, conn, server):
         self.active = True
@@ -111,7 +113,6 @@ class Host(threading.Thread):
             self.authenticated = False
             self.email = None
             self.active = False
-
 
     def _send(self, data):
         iv = Random.new().read(AES.block_size)
@@ -139,7 +140,6 @@ class Host(threading.Thread):
         iv = data[:16]
         cipher = AES.new(self.key, AES.MODE_CFB, iv)
         return cipher.decrypt(data)[16:].decode()
-
 
     def run(self):
         logging.info("Starting loop")
@@ -186,13 +186,11 @@ class Server:
         self.to_send = "/home/que.json"
         self.check_to_send()
 
-
     def get_client_by_email(self, e):
         for c in self.clients:
             if c.email == e and c.email:
                    return c
         return None
-
 
     def check_to_send(self):
         with open(self.to_send) as f:
@@ -200,8 +198,6 @@ class Server:
 
         self.que = [parse(n) for n in data["que"]]
         print(self.que)
-
-
 
     def run(self):
         print("running")
@@ -219,10 +215,13 @@ class Server:
 
             # add outgoing to que + clients dc
             for client in self.clients:
+                if client.isActive():
+                    client.close()
                 if client.active == False:
                     print("REMOVING {}".format(client))
                     self.clients.remove(client)
                     continue
+
                 self.que += client.outgoing
                 client.outgoing = []
 
@@ -236,6 +235,7 @@ class Server:
             if self.last_clients != len(self.clients):
                 self.last_clients = len(self.clients)
                 print("CLIENTS CHANGES, NOW {}".format(self.last_clients))
+
     def close(self):
         self.active = False
         self.socket.close()
@@ -246,19 +246,19 @@ class Server:
             i.close()
         for i in self.clients:
             i.join()
+
     def start(self):
         t = threading.Thread(target=self.run)
         self.active = True
         t.start()
+
     def serverWideMessage(self, msg):
         for i in self.clients:
 
             i.send(msg)
 
 if __name__ == "__main__":
-    try:
-        server = Server()
-        server.start()
-        input()
-    except:
-        server.close()
+
+    server = Server()
+
+    server.close()
