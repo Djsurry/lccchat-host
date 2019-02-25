@@ -59,17 +59,17 @@ def auth(host):
     c = conn.cursor()
     print('starting auth process')
     email = host.socket.read(blocking=True)
-    sys.stdout.write(1)
+    sys.stdout.write("1")
     sys.stdout.flush()
     pubkey = host.socket.read(blocking=True)
-    sys.stdout.write(2)
+    sys.stdout.write('2')
     sys.stdout.flush()
     # if not email or not pubkey:
     #     sys.stdout.write("EMAIL OR PUBKEY NOT SENT")
     #     return False
     
     a = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
-    sys.stdout.write(3)
+    sys.stdout.write('3')
     sys.stdout.flush()
     if not a:
 
@@ -77,20 +77,20 @@ def auth(host):
         host.socket.send("ERR VERIFY {}".format(email))
         sys.stdout.write("NOT ON RECORD")
         return False
-    sys.stdout.write(4)
+    sys.stdout.write('4')
     sys.stoud.flush()
     r = [n for n in c.execute("select pubkey, verified from users where email=?", (hash_string(email),))][0]
     sys.stdout.write(f"r1: {r}")
-    sys.stdout.write(5)
+    sys.stdout.write('5')
     sys.stdout.flush()
     p = [n for n in r[0].split(":") if n]
-    sys.stdout.write(6)
+    sys.stdout.write('6')
     sys.stdout.write(f"r1: {r[1]}")
     sys.stdout.write(f"p: {p}")
     sys.stdout.flush()
     a = [int(n) for n in r[1].split()]
 
-    sys.stdout.write(7)
+    sys.stdout.write('7')
     sys.stdout.flush()
     if pubkey in p:
         sys.stdout.write("ASDAS")
