@@ -57,8 +57,7 @@ def verify(email, pubkey):
 def auth(host):
     conn = sqlite3.connect("/var/www/lccchat/lccchat/lccchat.db")
     c = conn.cursor()
-    sys.stdout.write("STARTING AUTH PROCESS")
-    sys.stdout.flush()
+    print('starting auth process')
     email = host.socket.read(blocking=True)
     sys.stdout.write(1)
     sys.stdout.flush()
