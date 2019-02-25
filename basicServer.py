@@ -260,6 +260,7 @@ class Server:
 if __name__ == "__main__":
     try:
         server = Server()
+        server.start()
         input()
     except:
 
