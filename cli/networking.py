@@ -21,6 +21,7 @@ class Network:
         self.email = email
         self.sock = Socket()
         self.authenticated = True
+        print("beginning auth")
         resp = auth(self)
         if not resp[0]:
             self.authenticated = False
