@@ -114,7 +114,7 @@ def auth(host):
             cipher = PKCS1_OAEP.new(RSA.importKey(pubkey))
 
             ciphertext = cipher.encrypt(key)
-  
+            write(f'sending {ciphertext}')
             host.socket.send(b"VER KEY")
             host.socket.send(ciphertext)
 
