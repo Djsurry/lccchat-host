@@ -147,7 +147,7 @@ class Host(threading.Thread):
 
             if self.socket.bufferedData():
                 data = self.read()
-                if data == None:
+                if data is None:
                     self.close()
                     logging.info("host {} dc".format(self.hostname))
                     continue
@@ -215,8 +215,6 @@ class Server:
 
             # add outgoing to que + clients dc
             for client in self.clients:
-                if client.is_alive():
-                    client.close()
                 if client.active == False:
                     print("REMOVING {}".format(client))
                     self.clients.remove(client)
