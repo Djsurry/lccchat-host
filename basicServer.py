@@ -215,7 +215,7 @@ class Server:
 
             # add outgoing to que + clients dc
             for client in self.clients:
-                if client.isActive():
+                if client.is_alive():
                     client.close()
                 if client.active == False:
                     print("REMOVING {}".format(client))

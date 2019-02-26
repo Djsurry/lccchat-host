@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f114e80-9b4b-4f72-84e9-d92b1518f656" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/authenticateServer.py" beforeDir="false" afterPath="$PROJECT_DIR$/authenticateServer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/basicServer.py" beforeDir="false" afterPath="$PROJECT_DIR$/basicServer.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,11 +24,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/basicServer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="101" column="25" selection-start-line="101" selection-start-column="25" selection-end-line="101" selection-end-column="25" />
+            <state relative-caret-position="302">
+              <caret line="217" column="33" selection-start-line="217" selection-start-column="33" selection-end-line="217" selection-end-column="33" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
@@ -36,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/authenticateServer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="421">
-              <caret line="121" column="8" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="8" />
+            <state relative-caret-position="91">
+              <caret line="99" lean-forward="true" selection-start-line="99" selection-end-line="99" />
               <folding>
                 <element signature="e#1#66#0" expanded="true" />
               </folding>
@@ -98,6 +98,7 @@
       <find>STARTING LOO</find>
       <find>closing</find>
       <find>print</find>
+      <find>sys.stdout</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -118,8 +119,8 @@
         <option value="$PROJECT_DIR$/protocal.py" />
         <option value="$PROJECT_DIR$/cli/test/host.py" />
         <option value="$PROJECT_DIR$/cli/networking.py" />
-        <option value="$PROJECT_DIR$/basicServer.py" />
         <option value="$PROJECT_DIR$/authenticateServer.py" />
+        <option value="$PROJECT_DIR$/basicServer.py" />
       </list>
     </option>
   </component>
@@ -206,7 +207,7 @@
       <workItem from="1546569859541" duration="43000" />
       <workItem from="1548468352764" duration="283000" />
       <workItem from="1549749249827" duration="1880000" />
-      <workItem from="1550584928636" duration="3446000" />
+      <workItem from="1550584928636" duration="3536000" />
     </task>
     <task id="LOCAL-00058" summary="debug">
       <created>1545864184702</created>
@@ -555,7 +556,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44714000" />
+    <option name="totallyTimeSpent" value="44804000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="43" width="1400" height="783" extended-state="0" />
@@ -790,22 +791,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/basicServer.py">
+    <entry file="file://$PROJECT_DIR$/authenticateServer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="101" column="25" selection-start-line="101" selection-start-column="25" selection-end-line="101" selection-end-column="25" />
+        <state relative-caret-position="91">
+          <caret line="99" lean-forward="true" selection-start-line="99" selection-end-line="99" />
           <folding>
-            <element signature="e#0#51#0" expanded="true" />
+            <element signature="e#1#66#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/authenticateServer.py">
+    <entry file="file://$PROJECT_DIR$/basicServer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="121" column="8" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="8" />
+        <state relative-caret-position="302">
+          <caret line="217" column="33" selection-start-line="217" selection-start-column="33" selection-end-line="217" selection-end-column="33" />
           <folding>
-            <element signature="e#1#66#0" expanded="true" />
+            <element signature="e#0#51#0" expanded="true" />
           </folding>
         </state>
       </provider>
