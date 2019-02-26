@@ -73,15 +73,14 @@ def auth(host):
     a = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
     sys.stdout.write('3')
     sys.stdout.flush()
-    write(str(a))
+    
     if not a:
         write('here')
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
         host.socket.send("ERR VERIFY {}".format(email))
         sys.stdout.write("NOT ON RECORD")
         return False
-    sys.stdout.write('4')
-    sys.stoud.flush()
+    write(str([n for n in c.execute("select pubkey, verified from users where email=?", (hash_string(email),))][0]))
     r = [n for n in c.execute("select pubkey, verified from users where email=?", (hash_string(email),))][0]
     sys.stdout.write(f"r1: {r}")
     sys.stdout.write('5')
