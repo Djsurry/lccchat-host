@@ -73,6 +73,7 @@ def auth(host):
     a = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
     sys.stdout.write('3')
     sys.stdout.flush()
+    write(str(a))
     if not a:
         write('here')
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
