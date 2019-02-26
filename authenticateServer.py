@@ -109,8 +109,7 @@ def auth(host):
         else:
             write('it worked?')
             key = os.urandom(16)
-            sys.stdout.write(key)
-            sys.stdout.flush()
+
             cipher = PKCS1_OAEP.new(RSA.importKey(pubkey))
 
             ciphertext = cipher.encrypt(key)
