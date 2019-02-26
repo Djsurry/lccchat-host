@@ -9,7 +9,7 @@ from Email import sendEmail
 IP = "167.99.180.229"
 PORT = 12341
 def write(s):
-    sys.stdout.write(s)
+    sys.stdout.write(s + '\n')
     sys.stdout.flush()
 
 def hash_string(string):
@@ -73,7 +73,7 @@ def auth(host):
     a = [n for n in c.execute("select email from users where email=?", (hash_string(email),))]
     sys.stdout.write('3')
     sys.stdout.flush()
-    
+
     if not a:
         write('here')
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
@@ -107,7 +107,7 @@ def auth(host):
             host.socket.send("ERR VERIFY {}".format(email))
             return False
         else:
-
+            write('it worked?')
             key = os.urandom(16)
             sys.stdout.write(key)
             sys.stdout.flush()
