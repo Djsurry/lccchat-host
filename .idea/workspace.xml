@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9f114e80-9b4b-4f72-84e9-d92b1518f656" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/authenticateServer.py" beforeDir="false" afterPath="$PROJECT_DIR$/authenticateServer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ips.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tmp.txt" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,8 +45,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/authenticateServer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="92" column="24" selection-start-line="92" selection-start-column="24" selection-end-line="92" selection-end-column="24" />
+            <state relative-caret-position="323">
+              <caret line="76" column="19" selection-start-line="76" selection-start-column="19" selection-end-line="76" selection-end-column="19" />
               <folding>
                 <element signature="e#1#66#0" expanded="true" />
               </folding>
@@ -214,7 +212,7 @@
       <workItem from="1546569859541" duration="43000" />
       <workItem from="1548468352764" duration="283000" />
       <workItem from="1549749249827" duration="1880000" />
-      <workItem from="1550584928636" duration="2426000" />
+      <workItem from="1550584928636" duration="2853000" />
     </task>
     <task id="LOCAL-00058" summary="debug">
       <created>1545864184702</created>
@@ -563,7 +561,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43694000" />
+    <option name="totallyTimeSpent" value="44121000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="43" width="1400" height="783" extended-state="0" />
@@ -807,8 +805,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/authenticateServer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="92" column="24" selection-start-line="92" selection-start-column="24" selection-end-line="92" selection-end-column="24" />
+        <state relative-caret-position="323">
+          <caret line="76" column="19" selection-start-line="76" selection-start-column="19" selection-end-line="76" selection-end-column="19" />
           <folding>
             <element signature="e#1#66#0" expanded="true" />
           </folding>

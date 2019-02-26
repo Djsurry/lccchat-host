@@ -8,7 +8,9 @@ from Email import sendEmail
 
 IP = "167.99.180.229"
 PORT = 12341
-
+def write(s):
+    sys.stdout.write(s)
+    sys.stdout.flush()
 
 def hash_string(string):
     """
@@ -72,7 +74,7 @@ def auth(host):
     sys.stdout.write('3')
     sys.stdout.flush()
     if not a:
-
+        write('here')
         sendEmail(email, "Verify", "Click here: {}".format(verify(email, pubkey)))
         host.socket.send("ERR VERIFY {}".format(email))
         sys.stdout.write("NOT ON RECORD")
