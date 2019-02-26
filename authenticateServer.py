@@ -117,8 +117,6 @@ def auth(host):
             host.socket.send(b"VER KEY")
             host.socket.send(ciphertext)
 
-            sys.stdout.write("SENT KEY")
-            sys.stdout.write()
             return key, email
     
     else:
